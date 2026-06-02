@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+    --font-rajdhani: "Rajdhani", sans-serif;
+
+    --color-gs-red: #e50914;
+    --color-gs-dark: #121212;
+}
+
+body {
+    @apply bg-[#0d0d0d] text-white;
+}
