@@ -1,18 +1,21 @@
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import PopularGames from "./components/PopularGames";
-import LatestArticles from "./components/LatestArticles";
 import Footer from "./components/Footer";
+
+import Home from './pages/Home';
 
 function App() {
     return (
         <Router>
-            <div className="min-h-screen bg-[#0d0d0d] text-white">
+            <div className="min-h-screen flex flex-col bg-[#0d0d0d] text-white">
                 <Navbar />
-                <Hero />
-                <PopularGames />
-                <LatestArticles />
+                
+                <main className="flex-grow">
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                    </Routes>
+                </main>
+
                 <Footer />
             </div>
         </Router>
