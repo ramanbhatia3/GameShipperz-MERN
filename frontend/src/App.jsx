@@ -11,6 +11,9 @@ import Cart from './pages/Cart';
 import Consoles from "./pages/Consoles";
 import GamingPCs from "./pages/GamingPCs";
 
+import ArticleDetail from './pages/ArticleDetail';
+import Articles from "./pages/Articles";
+
 function App() {
     return (
         <Router>
@@ -23,10 +26,13 @@ function App() {
                         <Route path="/login" element={<Login />} />
                         <Route path="/signup" element={<Signup />} />
 
+                        <Route path="/articles" element={<Articles />} />
                         <Route path="/consoles" element={<Consoles />} />
                         <Route path="/gamingpcs" element={<GamingPCs />} />
                         <Route path="/games" element={<Games />} />
                         <Route path="/cart" element={<Cart />} />
+
+                        <Route path="/articles/:id" element={<ArticleDetail />} />
                     </Routes>
                 </main>
 

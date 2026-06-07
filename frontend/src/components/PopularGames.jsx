@@ -13,12 +13,12 @@ const PopularGames = () => {
     }
 
     const gamesData = [
-        { id: 1, title: "Spider-Man 2", image: "/images/spiderman2.webp", link: "/games" },
-        { id: 2, title: "Forza Horizon 5", image: "/images/forza5.jpg", link: "/games" },
-        { id: 3, title: "Cricket 24", image: "/images/cricket24.jpg", link: "/games" },
-        { id: 4, title: "Cyberpunk 2077", image: "/images/cyberpunk2077.png", link: "/games" },
-        { id: 5, title: "The Last Of Us Part II", image: "/images/thelastofus2.webp", link: "/games" },
-        { id: 6, title: "Forza Motorsport 8", image: "/images/forzamotorsport8png.png", link: "/games" },
+        { id: 1, title: "Spider-Man 2", image: "/images/spiderman2.webp", link: "/articles/spiderman-2" },
+        { id: 2, title: "Forza Horizon 5", image: "/images/forza5.jpg", link: "/articles/forza-horizon-5" },
+        { id: 3, title: "Cricket 24", image: "/images/cricket24.jpg", link: "/articles/cricket-24" },
+        { id: 4, title: "Cyberpunk 2077", image: "/images/cyberpunk2077.png", link: "/articles/cyberpunk-2077" },
+        { id: 5, title: "The Last Of Us Part II", image: "/images/thelastofus2.webp", link: "/articles/the-last-of-us-part-ii" },
+        { id: 6, title: "Forza Motorsport 8", image: "/images/forzamotorsport8png.png", link: "/articles/forza-motorsport-8" },
     ]
 
     return (
