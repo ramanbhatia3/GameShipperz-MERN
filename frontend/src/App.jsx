@@ -8,6 +8,7 @@ import Signup from './pages/Signup';
 
 import Games from './pages/Games';
 import Cart from './pages/Cart';
+import Consoles from "./pages/Consoles";
 
 function App() {
     return (
@@ -21,6 +22,7 @@ function App() {
                         <Route path="/login" element={<Login />} />
                         <Route path="/signup" element={<Signup />} />
 
+                        <Route path="/consoles" element={<Consoles />} />
                         <Route path="/games" element={<Games />} />
                         <Route path="/cart" element={<Cart />} />
                     </Routes>
