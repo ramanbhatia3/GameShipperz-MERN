@@ -6,6 +6,9 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
+import Games from './pages/Games';
+import Cart from './pages/Cart';
+
 function App() {
     return (
         <Router>
@@ -17,6 +20,9 @@ function App() {
                         <Route path="/" element={<Home />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/signup" element={<Signup />} />
+
+                        <Route path="/games" element={<Games />} />
+                        <Route path="/cart" element={<Cart />} />
                     </Routes>
                 </main>
 
