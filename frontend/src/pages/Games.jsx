@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useProducts from '../hooks/useProducts';
+import Loader from '../components/Loader';
 
 const Games = () => {
     const { data: games, isLoading, error } = useProducts('/api/games/get-games');
@@ -62,15 +63,6 @@ const Games = () => {
         displayedGames.sort((a, b) => b.price - a.price);
     }
 
-    if (isLoading) {
-        return (
-            <div className="fixed inset-0 bg-[#0f0f0f] z-50 flex flex-col justify-center items-center font-rajdhani">
-                <div className="w-12 h-12 border-4 border-[#333] border-t-gs-red rounded-full animate-spin mb-4"></div>
-                <p className="text-white text-xl">Loading Games...</p>
-            </div>
-        );
-    }
-
     return (
         <div className="min-h-screen py-8 px-4 font-rajdhani">
             <div className="flex flex-wrap justify-center gap-4 p-4 bg-[#1c1c1c] border-b-2 border-gs-red mb-8 rounded-lg max-w-[1200px] mx-auto">
@@ -109,7 +101,9 @@ const Games = () => {
             {error && <p className="text-center text-gs-red text-xl">{error}</p>}
 
             <div className="flex flex-wrap gap-5 justify-center max-w-[1200px] mx-auto">
-                {displayedGames.length > 0 ? (
+                {isLoading ? (
+                    <Loader text="Loading Games..." />
+                ) : displayedGames.length > 0 ? (
                     displayedGames.map((game) => (
                         <div 
                             key={game._id}

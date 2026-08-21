@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useProducts from '../hooks/useProducts';
+import Loader from '../components/Loader';
 
 const Consoles = () => {
     const { data: consoles, isLoading, error } = useProducts('/api/consoles/get-console');
@@ -62,15 +63,6 @@ const Consoles = () => {
         displayedConsoles.sort((a, b) => b.price - a.price);
     }
 
-    if (isLoading) {
-        return (
-            <div className="fixed inset-0 bg-[#0f0f0f] z-50 flex flex-col justify-center items-center font-rajdhani">
-                <div className="w-12 h-12 border-4 border-[#333] border-t-gs-red rounded-full animate-spin mb-4"></div>
-                <p className="text-white text-xl">Loading Consoles...</p>
-            </div>
-        );
-    }
-
     return (
         <div className="min-h-screen py-8 px-4 font-rajdhani">
             <div className="flex flex-wrap justify-center gap-4 p-4 bg-[#1c1c1c] border-b-2 border-gs-red mb-8 rounded-lg max-w-[1200px] mx-auto">
@@ -107,7 +99,9 @@ const Consoles = () => {
             {error && <p className="text-center text-gs-red text-xl">{error}</p>}
 
             <div className="flex flex-wrap gap-5 justify-center max-w-[1200px] mx-auto">
-                {displayedConsoles.length > 0 ? (
+                {isLoading ? (
+                    <Loader text="Loading Consoles..." />
+                ) : displayedConsoles.length > 0 ? (
                     displayedConsoles.map((consoleItem) => (
                         <div key={consoleItem._id} className="bg-[#1a1a1a] text-white rounded-xl p-3 w-full md:w-[240px] shadow-[0_4px_10px_rgba(0,0,0,0.4)] text-left md:text-center transition-transform duration-200 hover:-translate-y-1.5 flex flex-row md:flex-col">
                             <div className="shrink-0 w-[120px] md:w-full mr-4 md:mr-0 md:mb-3">

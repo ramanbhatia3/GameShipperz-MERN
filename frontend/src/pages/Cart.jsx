@@ -1,40 +1,41 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Loader from '../components/Loader';
 
 const Cart = () => {
-    const [cartItems, setCartItems] = useState([])
-    const [isLoading, setIsLoading] = useState(true)
+    const [cartItems, setCartItems] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const fetchCartItems = async () => {
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("token");
 
         if (!token) {
-            setIsLoading(false)
-            return
+            setIsLoading(false);
+            return;
         }
 
         try {
             const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/cart`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
-            const data = await res.json()
+            const data = await res.json();
             
             if (res.ok) {
-                setCartItems(data.items || [])
+                setCartItems(data.items || []);
             }
         } catch (err) {
-            console.error("Cart fetch error:", err)
+            console.error("Cart fetch error:", err);
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchCartItems()
+        fetchCartItems();
     }, []);
 
     const removeItem = async (productId) => {
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("token");
         try {
             const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/cart/remove/${productId}`, {
                 method: "DELETE",
@@ -42,27 +43,18 @@ const Cart = () => {
             });
             
             if (res.ok) {
-                setCartItems(prev => prev.filter(item => item.productId !== productId))
+                setCartItems(prev => prev.filter(item => item.productId !== productId));
             } else {
-                alert("Failed to remove item.")
+                alert("Failed to remove item.");
             }
         } catch (err) {
-            console.error("Remove error:", err)
-            alert("Failed to remove item.")
+            console.error("Remove error:", err);
+            alert("Failed to remove item.");
         }
     };
 
-    const totalAmount = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0)
-    const token = localStorage.getItem("token")
-
-    if (isLoading) {
-        return (
-            <div className="fixed inset-0 bg-[#0f0f0f] z-50 flex flex-col justify-center items-center font-rajdhani">
-                <div className="w-12 h-12 border-4 border-[#333] border-t-gs-red rounded-full animate-spin mb-4"></div>
-                <p className="text-white text-xl">Loading Cart...</p>
-            </div>
-        );
-    }
+    const totalAmount = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    const token = localStorage.getItem("token");
 
     if (!token) {
         return (
@@ -81,7 +73,9 @@ const Cart = () => {
                     Your Shopping Cart
                 </h2>
 
-                {cartItems.length === 0 ? (
+                {isLoading ? (
+                    <Loader text="Loading Cart Items..." />
+                ) : cartItems.length === 0 ? (
                     <p className="text-center text-gray-400 text-xl py-10">Your cart is empty.</p>
                 ) : (
                     <div className="flex flex-col gap-5">
@@ -119,4 +113,4 @@ const Cart = () => {
     );
 };
 
-export default Cart
+export default Cart;
