@@ -1,38 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useProducts from '../hooks/useProducts';
 
 const Consoles = () => {
-    const [consoles, setConsoles] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState('');
+    const { data: consoles, isLoading, error } = useProducts('/api/consoles/get-console');
     
     const [search, setSearch] = useState('');
     const [brandFilter, setBrandFilter] = useState('all');
     const [sort, setSort] = useState('');
     
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const fetchConsoles = async () => {
-            try {
-                const res = await fetch("http://localhost:8080/api/consoles/get-console");
-                const result = await res.json();
-                
-                if (res.ok) {
-                    setConsoles(result.data);
-                } else {
-                    setError("Failed to load consoles.");
-                }
-            } catch (err) {
-                console.error("Fetch error:", err);
-                setError("Network error occurred.");
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchConsoles();
-    }, []);
 
     const addToCart = async (consoleItem) => {
         const token = localStorage.getItem("token");
@@ -44,7 +21,7 @@ const Consoles = () => {
         }
 
         try {
-            const response = await fetch("http://localhost:8080/api/cart/add", {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/cart/add`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -96,7 +73,6 @@ const Consoles = () => {
 
     return (
         <div className="min-h-screen py-8 px-4 font-rajdhani">
-
             <div className="flex flex-wrap justify-center gap-4 p-4 bg-[#1c1c1c] border-b-2 border-gs-red mb-8 rounded-lg max-w-[1200px] mx-auto">
                 <input 
                     type="text" 

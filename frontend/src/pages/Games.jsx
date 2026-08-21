@@ -1,50 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useProducts from '../hooks/useProducts';
 
 const Games = () => {
-    const [games, setGames] = useState([])
-    const [isLoading, setIsLoading] = useState(true)
-    const [error, setError] = useState('')
+    const { data: games, isLoading, error } = useProducts('/api/games/get-games');
     
-    const [search, setSearch] = useState('')
-    const [platform, setPlatform] = useState('all')
-    const [sort, setSort] = useState('')
+    const [search, setSearch] = useState('');
+    const [platform, setPlatform] = useState('all');
+    const [sort, setSort] = useState('');
     
-    const navigate = useNavigate()
-
-    useEffect(() => {
-        const fetchGames = async () => {
-            try {
-                const res = await fetch("http://localhost:8080/api/games/get-games");
-                const result = await res.json()
-                
-                if (res.ok) {
-                    setGames(result.data)
-                } else {
-                    setError("Failed to load games.")
-                }
-            } catch (err) {
-                console.error("Fetch error:", err)
-                setError("Network error occurred.")
-            } finally {
-                setIsLoading(false)
-            }
-        };
-
-        fetchGames()
-    }, []);
+    const navigate = useNavigate();
 
     const addToCart = async (game) => {
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("token");
         
         if (!token) {
-            alert("Please log in to add items to your cart.")
-            navigate('/login')
-            return
+            alert("Please log in to add items to your cart.");
+            navigate('/login');
+            return;
         }
 
         try {
-            const response = await fetch("http://localhost:8080/api/cart/add", {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/cart/add`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -57,32 +34,32 @@ const Games = () => {
                     price: game.price,
                     quantity: 1
                 })
-            })
+            });
 
-            const result = await response.json()
+            const result = await response.json();
             if (response.ok) {
-                alert("Game added to cart successfully!")
+                alert("Game added to cart successfully!");
             } else {
-                alert(result.msg || "Error adding game to cart.")
+                alert(result.msg || "Error adding game to cart.");
             }
         } catch (error) {
-            console.error("Cart Error:", error)
-            alert("Something went wrong.")
+            console.error("Cart Error:", error);
+            alert("Something went wrong.");
         }
     };
 
     let displayedGames = [...games];
 
     if (search) {
-        displayedGames = displayedGames.filter(g => g.title.toLowerCase().includes(search.toLowerCase()))
+        displayedGames = displayedGames.filter(g => g.title.toLowerCase().includes(search.toLowerCase()));
     }
     if (platform !== 'all') {
-        displayedGames = displayedGames.filter(g => g.platform === platform)
+        displayedGames = displayedGames.filter(g => g.platform === platform);
     }
     if (sort === 'asc') {
-        displayedGames.sort((a, b) => a.price - b.price)
+        displayedGames.sort((a, b) => a.price - b.price);
     } else if (sort === 'desc') {
-        displayedGames.sort((a, b) => b.price - a.price)
+        displayedGames.sort((a, b) => b.price - a.price);
     }
 
     if (isLoading) {
@@ -96,7 +73,6 @@ const Games = () => {
 
     return (
         <div className="min-h-screen py-8 px-4 font-rajdhani">
-
             <div className="flex flex-wrap justify-center gap-4 p-4 bg-[#1c1c1c] border-b-2 border-gs-red mb-8 rounded-lg max-w-[1200px] mx-auto">
                 <input 
                     type="text" 

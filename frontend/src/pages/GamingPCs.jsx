@@ -1,38 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useProducts from '../hooks/useProducts';
 
 const GamingPCs = () => {
-    const [pcs, setPcs] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState('');
+    const { data: pcs, isLoading, error } = useProducts('/api/pcs/get-pcs');
     
     const [search, setSearch] = useState('');
     const [brandFilter, setBrandFilter] = useState('all');
     const [sort, setSort] = useState('');
     
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const fetchPCs = async () => {
-            try {
-                const res = await fetch("http://localhost:8080/api/pcs/get-pcs");
-                const result = await res.json();
-                
-                if (res.ok) {
-                    setPcs(result.data);
-                } else {
-                    setError("Failed to load gaming PCs.");
-                }
-            } catch (err) {
-                console.error("Fetch error:", err);
-                setError("Network error occurred.");
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchPCs();
-    }, []);
 
     const addToCart = async (pcItem) => {
         const token = localStorage.getItem("token");
@@ -44,7 +21,7 @@ const GamingPCs = () => {
         }
 
         try {
-            const response = await fetch("http://localhost:8080/api/cart/add", {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/cart/add`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -96,8 +73,6 @@ const GamingPCs = () => {
 
     return (
         <div className="min-h-screen py-8 px-4 font-rajdhani">
-
-            {/* Filtering and Sorting Bar */}
             <div className="flex flex-wrap justify-center gap-4 p-4 bg-[#1c1c1c] border-b-2 border-gs-red mb-8 rounded-lg max-w-[1200px] mx-auto">
                 <input 
                     type="text" 
@@ -133,7 +108,6 @@ const GamingPCs = () => {
 
             {error && <p className="text-center text-gs-red text-xl">{error}</p>}
 
-            {/* Responsive PC Grid */}
             <div className="flex flex-wrap gap-5 justify-center max-w-[1200px] mx-auto">
                 {displayedPCs.length > 0 ? (
                     displayedPCs.map((pcItem) => (

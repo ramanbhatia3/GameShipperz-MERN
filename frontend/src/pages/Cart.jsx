@@ -14,7 +14,7 @@ const Cart = () => {
         }
 
         try {
-            const res = await fetch("http://localhost:8080/api/cart", {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/cart`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             const data = await res.json()
@@ -36,7 +36,7 @@ const Cart = () => {
     const removeItem = async (productId) => {
         const token = localStorage.getItem("token")
         try {
-            const res = await fetch(`http://localhost:8080/api/cart/remove/${productId}`, {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/cart/remove/${productId}`, {
                 method: "DELETE",
                 headers: { "Authorization": `Bearer ${token}` }
             });
@@ -86,7 +86,7 @@ const Cart = () => {
                 ) : (
                     <div className="flex flex-col gap-5">
                         {cartItems.map((item) => (
-                            <div key={item.productId} className="flex flex-col md:flex-row items-center gap-5 py-5 border-b border-[#333] transition-colors hover:bg-[#222]">
+                            <div key={item.productId} className="flex flex-col md:flex-row items-center gap-5 py-5 border-b border-[#333] transition-colors">
                                 <img src={item.image} alt={item.name} className="w-[100px] h-[100px] object-contain bg-white rounded-lg p-1" />
                                 
                                 <div className="flex-grow text-center md:text-left">
@@ -97,7 +97,7 @@ const Cart = () => {
 
                                 <button 
                                     onClick={() => removeItem(item.productId)}
-                                    className="bg-transparent text-gs-red border border-gs-red px-4 py-2 rounded-md font-bold hover:bg-gs-red hover:text-white hover:shadow-[0_0_10px_rgba(229,9,20,0.5)] transition-all duration-300"
+                                    className="bg-transparent text-gs-red border border-gs-red px-4 py-2 rounded-md font-bold hover:bg-gs-red hover:text-white cursor-pointer hover:shadow-[0_0_10px_rgba(229,9,20,0.5)] transition-all duration-300"
                                 >
                                     Remove
                                 </button>
