@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import useProducts from '../hooks/useProducts';
 import Loader from '../components/Loader';
+import toast from 'react-hot-toast';
 
 const Consoles = () => {
+    const { token } = useContext(AuthContext);
     const { data: consoles, isLoading, error } = useProducts('/api/consoles/get-console');
     
     const [search, setSearch] = useState('');
@@ -13,10 +16,8 @@ const Consoles = () => {
     const navigate = useNavigate();
 
     const addToCart = async (consoleItem) => {
-        const token = localStorage.getItem("token");
-        
         if (!token) {
-            alert("Please log in to add items to your cart.");
+            toast.error("Please log in to add items to your cart.");
             navigate('/login');
             return;
         }
@@ -39,13 +40,13 @@ const Consoles = () => {
 
             const result = await response.json();
             if (response.ok) {
-                alert("Console added to cart successfully!");
+                toast.success("Console added to cart successfully!");
             } else {
-                alert(result.msg || "Error adding console to cart.");
+                toast.error(result.msg || "Error adding console to cart.");
             }
         } catch (error) {
             console.error("Cart Error:", error);
-            alert("Something went wrong.");
+            toast.error("Something went wrong.");
         }
     };
 

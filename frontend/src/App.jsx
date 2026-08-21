@@ -1,8 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster } from 'react-hot-toast';
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-
 import ScrollToTop from './components/ScrollToTop';
+import ProtectedRoute from './components/ProtectedRoute';
 
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -22,6 +24,16 @@ function App() {
             <ScrollToTop />
             <div className="min-h-screen flex flex-col bg-[#0d0d0d] text-white">
                 <Navbar />
+                <Toaster 
+                    position="bottom-right" 
+                    toastOptions={{
+                        style: {
+                            background: '#333',
+                            color: '#fff',
+                            fontFamily: 'Rajdhani, sans-serif'
+                        }
+                    }} 
+                />
                 
                 <main className="flex-grow">
                     <Routes>
@@ -33,7 +45,16 @@ function App() {
                         <Route path="/consoles" element={<Consoles />} />
                         <Route path="/gamingpcs" element={<GamingPCs />} />
                         <Route path="/games" element={<Games />} />
-                        <Route path="/cart" element={<Cart />} />
+                        
+                        {/* Protected Route for Cart */}
+                        <Route 
+                            path="/cart" 
+                            element={
+                                <ProtectedRoute>
+                                    <Cart />
+                                </ProtectedRoute>
+                            } 
+                        />
 
                         <Route path="/articles/:id" element={<ArticleDetail />} />
                     </Routes>

@@ -1,25 +1,25 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
+import toast from 'react-hot-toast';
 
 const Login = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [showPassword, setShowPassword] = useState(false)
-    const [error, setError] = useState('')
-    
-    const [isLoading, setIsLoading] = useState(false)
+    const { login } = useContext(AuthContext);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
-        e.preventDefault()
-        setError('')
-        setIsLoading(true)
+        e.preventDefault();
+        setIsLoading(true);
 
         if (!email || !password){
-            setError("Please enter email and password.")
-            setIsLoading(false)
-            return
+            toast.error("Please enter email and password.");
+            setIsLoading(false);
+            return;
         }
 
         try {
@@ -32,19 +32,18 @@ const Login = () => {
             const res = await response.json();
 
             if (!response.ok) {
-                setError(res.msg || "Login failed")
-                setIsLoading(false)
-                return
+                toast.error(res.msg || "Login failed");
+                setIsLoading(false);
+                return;
             }
 
-            localStorage.setItem("token", res.token)
-            alert("Login successful!")
-
-            window.location.href = "/"
+            login(res.token);
+            toast.success("Login successful!");
+            navigate("/");
         } catch (err) {
-            console.error("Network error:", err)
-            setError("Something went wrong. Please try again.")
-            setIsLoading(false)
+            console.error("Network error:", err);
+            toast.error("Something went wrong. Please try again.");
+            setIsLoading(false);
         }
     }
 
@@ -55,8 +54,6 @@ const Login = () => {
             </div>
 
             <div className="bg-[#111] p-8 rounded-lg border border-[#333] w-full max-w-sm shadow-[0_0_15px_rgba(0,0,0,0.5)]">
-                {error && <div className="bg-gs-red/20 text-gs-red p-3 rounded mb-4 text-center border border-gs-red font-semibold">{error}</div>}
-
                 <form onSubmit={handleLogin} className="flex flex-col gap-4">
                     <div>
                         <label className="block text-white font-bold mb-2">Email <span className="text-gs-red">*</span></label>
@@ -67,10 +64,8 @@ const Login = () => {
                         <label className="block text-white font-bold mb-2">Password <span className="text-gs-red">*</span></label>
                         <div className='relative'>
                             <input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required className="w-full p-2.5 border border-[#555] rounded bg-black text-white focus:outline-none focus:border-gs-red transition-colors" />
-                            
-                            <span className='absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-black' onClick={() => setShowPassword(!showPassword)}>&#128065;</span>
+                            <span className='absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-white' onClick={() => setShowPassword(!showPassword)}>&#128065;</span>
                         </div>
-                        
                     </div>
 
                     <button type='submit' className='w-full py-3 mt-4 bg-white text-black font-bold rounded hover:bg-gray-300 transition-colors duration-200 shadow-[0_0_10px_rgba(255,255,255,0.2)]'>
@@ -87,10 +82,9 @@ const Login = () => {
                 <p className='mt-6 text-center text-gray-400'>
                     New user? <Link to="/signup" className='text-white underline hover:text-gs-red transition-colors'>Sign up</Link>
                 </p>
-
             </div>
         </div>
     )
 }
 
-export default Login
+export default Login;

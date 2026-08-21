@@ -1,18 +1,15 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import Loader from '../components/Loader';
+import toast from 'react-hot-toast';
 
 const Cart = () => {
+    const { token } = useContext(AuthContext);
     const [cartItems, setCartItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     const fetchCartItems = async () => {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-            setIsLoading(false);
-            return;
-        }
+        if (!token) return;
 
         try {
             const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/cart`, {
@@ -25,6 +22,7 @@ const Cart = () => {
             }
         } catch (err) {
             console.error("Cart fetch error:", err);
+            toast.error("Failed to load cart.");
         } finally {
             setIsLoading(false);
         }
@@ -32,10 +30,9 @@ const Cart = () => {
 
     useEffect(() => {
         fetchCartItems();
-    }, []);
+    }, [token]);
 
     const removeItem = async (productId) => {
-        const token = localStorage.getItem("token");
         try {
             const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/cart/remove/${productId}`, {
                 method: "DELETE",
@@ -44,26 +41,17 @@ const Cart = () => {
             
             if (res.ok) {
                 setCartItems(prev => prev.filter(item => item.productId !== productId));
+                toast.success("Item removed from cart");
             } else {
-                alert("Failed to remove item.");
+                toast.error("Failed to remove item.");
             }
         } catch (err) {
             console.error("Remove error:", err);
-            alert("Failed to remove item.");
+            toast.error("Failed to remove item.");
         }
     };
 
     const totalAmount = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-        return (
-            <div className="min-h-[60vh] flex flex-col justify-center items-center font-rajdhani text-white">
-                <h2 className="text-2xl font-bold mb-4">You are not logged in</h2>
-                <Link to="/login" className="bg-gs-red px-6 py-2 rounded font-bold hover:bg-[#b00610] transition-colors">Log In to View Cart</Link>
-            </div>
-        );
-    }
 
     return (
         <div className="min-h-[calc(100vh-100px)] py-10 px-5 flex justify-center items-start font-rajdhani">

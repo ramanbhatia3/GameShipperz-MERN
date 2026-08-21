@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import useProducts from '../hooks/useProducts';
 import Loader from '../components/Loader';
+import toast from 'react-hot-toast';
 
 const Games = () => {
+    const { token } = useContext(AuthContext);
     const { data: games, isLoading, error } = useProducts('/api/games/get-games');
     
     const [search, setSearch] = useState('');
@@ -13,10 +16,8 @@ const Games = () => {
     const navigate = useNavigate();
 
     const addToCart = async (game) => {
-        const token = localStorage.getItem("token");
-        
         if (!token) {
-            alert("Please log in to add items to your cart.");
+            toast.error("Please log in to add items to your cart.");
             navigate('/login');
             return;
         }
@@ -39,13 +40,13 @@ const Games = () => {
 
             const result = await response.json();
             if (response.ok) {
-                alert("Game added to cart successfully!");
+                toast.success("Game added to cart successfully!");
             } else {
-                alert(result.msg || "Error adding game to cart.");
+                toast.error(result.msg || "Error adding game to cart.");
             }
         } catch (error) {
             console.error("Cart Error:", error);
-            alert("Something went wrong.");
+            toast.error("Something went wrong.");
         }
     };
 
